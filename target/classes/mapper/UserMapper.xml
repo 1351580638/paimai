@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 
+	namespace:写当前mapper文件对应的dao接口的全类名
+ -->
+<mapper namespace="com.baizhi.dao.UserDao">
+	<!-- 查詢全部 -->
+	<!-- <select id="selectAll" resultType="com.baizhi.entity.User">
+	select*from auction_user
+	</select> -->
+	
+	<!-- 查询一个 -->
+	<select id="selectOne" resultType="com.baizhi.entity.User">
+		select*from auction_user where user_name=#{user_name} and user_password=#{user_password}
+	</select>
+	
+	<!-- 注册 -->
+	<insert id="insert">
+		insert into auction_user values(auction_user_seq.nextval,#{user_name},#{user_password},#{user_card_no},#{user_tel},#{user_address},#{user_post_number},0,null,null)
+	</insert>
+	
+	
+	
+	
+</mapper>

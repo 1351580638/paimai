@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 
+	namespace:写当前mapper文件对应的dao接口的全类名
+ -->
+<mapper namespace="com.baizhi.dao.AuctionDao">
+	
+<!-- 查詢全部 -->
+	<!-- 添加 -->
+	<insert id="insert">
+		insert into auction_record values(auction_record_seq.nextval,#{user_id},#{auction_id},sysdate,#{auction_price})
+	</insert>
+	
+	
+	<select id="getAuction" resultType="com.baizhi.entity.AuctionDTO">
+		select r.auction_time auction_time,r.auction_price auction_price,u.user_name user_name
+			from auction_record r,auction_user u 
+			where r.user_id=u.user_id  and r.auction_id=#{auction_id}
+			order by r.auction_price DESC
+	</select>
+
+</mapper>

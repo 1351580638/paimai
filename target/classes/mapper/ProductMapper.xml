@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 
+	namespace:写当前mapper文件对应的dao接口的全类名
+ -->
+<mapper namespace="com.baizhi.dao.ProductDao">
+	<resultMap type="com.baizhi.entity.Product" id="aa">
+		<id column="auction_id" property="auction_id"/>
+		<result column="auction_name" property="auction_name"/>
+		<result column="auction_start_time" property="auction_start_time"/>
+		<result column="auction_end_time" property="auction_end_time"/>
+		<result column="auction_desc" property="auction_desc"/>
+		<result column="auction_start_price" property="auction_start_price"/>
+			<collection property="recordlist" ofType="com.baizhi.entity.Auction">
+			<id column="id" property="id"/>
+			<result column="aid" property="user_id"/>
+			<result column="auid" property="auction_id"/>
+			<result column="auction_time" property="auction_time"/>
+			<result column="auction_price" property="auction_price"/>
+				<association property="user" javaType="com.baizhi.entity.User">
+					<id column="user_id" property="user_id"/>
+					<result column="user_name" property="user_name"/>
+				</association>
+			</collection>
+	</resultMap>
+		
+	<select id="selectRR" resultMap="aa">
+		select au.*,ar.id,ar.user_id aid,ar.auction_id auid,ar.auction_time,ar.auction_price,aur.user_id,aur.user_name  
+		from auction au left join auction_record ar 
+		on ar.auction_id = au.auction_id
+		left join auction_user aur
+		on  ar.user_id=aur.user_id
+		where au.auction_id=#{int auction_id}
+		order by auction_price desc
+
+	</select>
+
+	<!-- 查詢全部 -->
+	<select id="selectAll" resultType="com.baizhi.entity.Product">
+	select *from auction
+	</select>
+	
+	<!-- 查询一个 -->
+	 <select id="selectOne" resultType="com.baizhi.entity.Product">
+		select *from auction where auction_id=#{auction_id}
+	</select>
+	
+	<!-- 修改 -->
+	<update id="update">
+		update auction set auction_name=#{auction_name},auction_start_price=#{auction_start_price},auction_upset=#{auction_upset},auction_start_time=#{auction_start_time},auction_end_time=#{auction_end_time},auction_desc=#{auction_desc} where auction_id=#{auction_id}
+	</update>
+	
+	<!-- 删除 -->
+	<delete id="delete">
+		delete from auction where auction_id=#{auction_id}
+	</delete>
+	
+	<!-- 添加 -->
+	<insert id="insert">
+		insert into auction values(auction_seq.nextval,#{auction_name},#{auction_start_price},#{auction_upset},#{auction_start_time},#{auction_end_time},#{auction_desc})
+	</insert>
+	
+	<!-- 查询 -->
+	<!-- <select id="search" resultType="com.baizhi.entity.Product">
+		select * from auction
+		<where>
+			<if test="auction_name!=null and auction_name!=''">
+				auction_name like '%'||#{auction_name}||'%'
+			</if>		
+			<if test="auction_desc!=null and auction_desc!=''">
+				and auction_desc like '%'||#{auction_desc}||'%'
+			</if>
+			<if test="auction_start_time!=null and auction_start_time!=''">
+				and auction_start_time <![CDATA[>=]]>#{auction_start_time}
+			</if>
+			<if test="auction_end_time!=null and auction_end_time!=''" >
+				and auction_end_time <![CDATA[<=]]>#{auction_end_time}
+			</if>
+			<if test="auction_start_price!=null and auction_start_price!=''">
+				and auction_start_price <![CDATA[<=]]>#{auction_start_price}
+			</if>
+		</where>
+	</select> -->
+	<select id="search" resultType="com.baizhi.entity.Product">
+				select*from auction
+				<where>
+					<if test="auction_name!=null">
+						and auction_name like #{auction_name}
+					</if>
+					<if test="auction_desc!=null">
+						and auction_desc like #{auction_desc}
+					</if>
+					<if test="auction_start_time!=null">
+						and auction_start_time <![CDATA[>=]]>#{auction_start_time} 	
+					</if>
+					<if test="auction_end_time!=null">
+						and auction_end_time <![CDATA[<=]]>#{auction_end_time}				
+					</if>
+					<if test="auction_upset!=null">
+						and auction_upset <![CDATA[<=]]>#{auction_upset}				
+					</if>
+					
+				</where>
+		</select>
+
+</mapper>
